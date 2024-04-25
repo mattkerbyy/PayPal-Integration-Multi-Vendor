@@ -1,0 +1,41 @@
+/* selleradminDashboardOrders.css */
+.orders-table {
+  margin-bottom: 20px;
+}
+
+.orders-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table th,
+.orders-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.orders-table th {
+  background-color: #f2f2f2;
+}
+
+/* selleradminDashboardTransactions.css */
+.transactions-table {
+  margin-bottom: 20px;
+}
+
+.transactions-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactions-table th,
+.transactions-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.transactions-table th {
+  background-color: #f2f2f2;
+}

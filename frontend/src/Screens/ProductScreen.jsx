@@ -74,13 +74,18 @@ function ProductScreen() {
                   variant="h4"
                   fontWeight="bold"
                   color="text.secondary"
+                  textAlign={"center"}
                 >
                   {product.name}
                 </Typography>
               </ListItem>
               <Divider component={"li"} />
               <ListItem>
-                <Typography fontWeight="bold" color="text.secondary">
+                <Typography
+                  fontWeight="bold"
+                  color="text.secondary"
+                  textAlign={"justify"}
+                >
                   {product.description}
                 </Typography>
               </ListItem>

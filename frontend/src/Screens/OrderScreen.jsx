@@ -62,39 +62,83 @@ function OrderScreen() {
     dispatch(payOrder(orderId.id, paymentResult));
   };
 
-  const onApproveHandler = (data, actions) => {};
-
-  const onError = (err) => {
-    console.error("createOrder_error:", err);
+  const onApproveHandler = (data, actions) => {
+    return actions.order.capture().then(function (details) {
+      successPaymentHandler({
+        id: details.id,
+        status: details.status,
+        update_time: details.update_time,
+      });
+    });
   };
 
+  // const createOrderHandler = (data, actions) => {
+  //   console.log(data.order);
+  //   const purchaseUnits = data.order.orderItems.map((item) => ({
+  //     amount: {
+  //       currency_code: "USD",
+  //       value: (Number(item.price) * Number(item.qty) + Number(item.taxPrice) + Number(item.shippingPrice)).toFixed(2),
+  //       breakdown: {
+  //         item_total: {
+  //           currency_code: "USD",
+  //           value: item.price * item.qty,
+  //         },
+  //         tax_total: {
+  //           currency_code: "USD",
+  //           value: item.taxPrice,
+  //         },
+  //         shipping: {
+  //           currency_code: "USD",
+  //           value: item.shippingPrice,
+  //         },
+  //       },
+  //     },
+  //     description: item.name,
+  //     reference_id: item.merchant_id,
+  //     payee: {
+  //       merchant_id: item.merchant_id,
+  //     },
+  //     items: [{
+  //       name: item.name,
+  //       unit_amount: {
+  //         currency_code: "USD",
+  //         value: item.price,
+  //       },
+  //       quantity: item.qty,
+  //     }]
+  //   }));
+
+  //   return actions.order.create({
+  //     purchase_units: purchaseUnits,
+  //   });
+  // };
+
   const createOrderHandler = (data, actions) => {
-    console.log(order);
     const purchaseUnits = order.orderItems.map((item) => ({
       amount: {
         currency_code: "USD",
         value: (
-          parseFloat(item.price) * parseFloat(item.qty) +
-          parseFloat(item.taxPrice || 0) +
-          parseFloat(item.shippingPrice || 0)
+          Number(item.price) * Number(item.qty) +
+          Number(item.taxPrice) +
+          Number(item.shippingPrice)
         ).toFixed(2),
         breakdown: {
           item_total: {
             currency_code: "USD",
-            value: (parseFloat(item.price) * parseFloat(item.qty)).toFixed(2),
+            value: item.price * item.qty,
           },
           tax_total: {
             currency_code: "USD",
-            value: parseFloat(item.taxPrice || 0).toFixed(2),
+            value: item.taxPrice,
           },
           shipping: {
             currency_code: "USD",
-            value: parseFloat(item.shippingPrice || 0).toFixed(2),
+            value: item.shippingPrice,
           },
         },
       },
       description: item.name,
-      reference_id: item.merchant_id,
+      reference_id: item.product,
       payee: {
         merchant_id: item.merchant_id,
       },
@@ -109,11 +153,10 @@ function OrderScreen() {
         },
       ],
     }));
-    return actions.order
-      .create({
-        purchase_units: purchaseUnits,
-      })
-      .catch(onError);
+
+    return actions.order.create({
+      purchase_units: purchaseUnits,
+    });
   };
 
   return (
@@ -246,7 +289,7 @@ function OrderScreen() {
                         <PayPalScriptProvider
                           options={{
                             "client-id":
-                              "Adu9d8fTx_iirJv8jw-cCgSnKCapCpVMr7YiqBXSPCVpxiXJV8inLZG0DbeRK-7SnUFHjHUXuMTdxDxL",
+                              "AYk5C3XlIBH3IIgAXvLUJqH4dxcf-5tIoyRxzejTM5FHcen0o6XzVr4cn0ufPVDvSGER5c_8cy4stmH8",
                             merchantId: order.orderItems.map(
                               (item) => item.merchant_id
                             ),
@@ -255,13 +298,11 @@ function OrderScreen() {
                           <PayPalButtons
                             createOrder={createOrderHandler}
                             style={{ layout: "vertical" }}
-                            onApprove={successPaymentHandler}
-                            onError={onError}
+                            onApprove={onApproveHandler}
+                            // onSuccess={successPaymentHandler}
                           />
                         </PayPalScriptProvider>
                       )}
-
-                      {error && <div>Error: {error}</div>}
                     </ListGroup.Item>
                   )}
                 </ListGroup>

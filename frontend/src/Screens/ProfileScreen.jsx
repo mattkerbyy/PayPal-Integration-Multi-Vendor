@@ -182,7 +182,11 @@ function ProfileScreen() {
                         <td>{order._id}</td>
                         <td>{order.createdAt.substring(0, 10)}</td>
                         <td>${order.totalPrice}</td>
-                        <td>
+                        <td
+                          className={
+                            order.isPaid ? "text-success" : "text-danger"
+                          }
+                        >
                           {order.isPaid ? (
                             order.paidAt.substring(0, 10)
                           ) : (
